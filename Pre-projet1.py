@@ -1,11 +1,27 @@
 import pygame
+import random
 from sys import exit
+import time
 
 pygame.init()
 screen = pygame.display.set_mode((1000,800))
 mouse_pos = pygame.mouse.get_pos()
 clock = pygame.time.Clock()
 
+# ---------------------------------------------------
+reponse = False
+liste = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+Code1 = random.choice(liste)
+Code2 = random.choice(liste)
+Code3 = random.choice(liste)
+Code4 = random.choice(liste)
+CodeComplete = [Code1] + [Code2] + [Code3] + [Code4]
+Completion = [0, 0, 0, 0]
+print(CodeComplete) # a retirer plus tard
+#----------------------------------------------------   
+
+                    
+#-----------------------------------------------------
 decaY = 40
 decaX = 0
 
@@ -35,15 +51,24 @@ Bouton8_Rect = Bouton8.get_rect(center = (500+ decaX,300+ decaY))
 Bouton9 = pygame.image.load('graphiques/png/Bouton9.png')
 Bouton9_Rect = Bouton9.get_rect(center = (725+ decaX,300+ decaY))
 
+apui = False
 
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
-            
-            
-            
+    
+    
+    if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = event.pos
+                if Bouton1_Rect.collidepoint(mouse_pos) & apui == False:
+                    apui = True
+                    print("appuie")
+
+    
+    
+    
     screen.blit(Fond_Jaune,(0,0))
     screen.blit(Fond_Gris,Fond_Gris_Rect)
     screen.blit(Fond_Noir,Fond_Noir_Rect)
