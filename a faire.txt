@@ -1,0 +1,10 @@
+effet visuel :
+	-pouvoir appuyer sur les boutons
+	-alarme
+	-subtil mouvement de cam
+Jeux : 
+	-digit foncionnels
+	-good ending & bad ending
+son : 
+	-music (variations en fonction de la partie)
+	-bruitage boutons
