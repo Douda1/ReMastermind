@@ -20,8 +20,9 @@ Completion = [0, 0, 0, 0]
 CodeNumber = 0
 print(CodeComplete) # a retirer plus tard
 #----------------------------------------------------   
-
-                    
+NombreTourPos = [8,12,9,10,11,7]
+NombreTour = random.choice(NombreTourPos)
+fin = False
 #----------------------------------------------------
 decaY = -15
 decaX = -100
@@ -52,7 +53,7 @@ class Button():
         self.appui = False
         
     def draw(self):
-        global CodeNumber
+        global CodeNumber, reponse, NombreTour
         pos = pygame.mouse.get_pos()
         if self.rect.collidepoint(pos):
             if pygame.mouse.get_pressed()[0] == 1 and self.appui == False:
@@ -62,6 +63,11 @@ class Button():
                 print(Completion)
                 if CodeNumber == 4:
                     CodeNumber = 0
+                    NombreTour -=1
+                    Completion = [0,0,0,0]
+                if CodeComplete == Completion :
+                    reponse = True
+
                     
         screen.blit(self.image, (self.rect.x, self.rect.y))
         
@@ -84,10 +90,15 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
+            
+    if reponse == True and fin == False :
+        print("gagné")
+        fin = True
+        
     
-    
-
-    
+    if NombreTour == 0 and fin == False:
+        print("perdu")
+        fin = True
     
     
     screen.blit(Fond_Jaune,(0,0))
