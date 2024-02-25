@@ -8,3 +8,5 @@ Jeux :
 son : 
 	-music (variations en fonction de la partie)
 	-bruitage boutons
+code : 
+	-commentaire
