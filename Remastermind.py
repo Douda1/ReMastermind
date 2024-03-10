@@ -19,11 +19,13 @@ CodeComplete = [Code1] + [Code2] + [Code3] + [Code4]
 Completion = [0, 0, 0, 0]
 CodeNumber = 0
 print(CodeComplete) # a retirer plus tard
+coul = [(0, 254, 0), (0, 254, 0), (0, 254, 0), (0, 254, 0)]
 #----------------------------------------------------   
 NombreTourPos = [8,12,9,10,11,7]
 NombreTour = random.choice(NombreTourPos)
 fin = False
 relai = 0
+Ya = False
 #----------------------------------------------------
 decaY = -15
 decaX = -100
@@ -44,8 +46,16 @@ Bouton7 = pygame.image.load('graphiques/png/Bouton7.png').convert_alpha()
 Bouton8 = pygame.image.load('graphiques/png/Bouton8.png').convert_alpha()
 Bouton9 = pygame.image.load('graphiques/png/Bouton9.png').convert_alpha()
 LaFont = pygame.font.Font('font/digital.ttf',50) # je fait charger la font
-
-text_surf = LaFont.render('My game', False, 'Green') #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+son1 = pygame.mixer.Sound('Son/sound1.mp3')
+son2 = pygame.mixer.Sound('Son/sound2.mp3')
+son3 = pygame.mixer.Sound('Son/sound3.mp3')
+son4 = pygame.mixer.Sound('Son/sound4.mp3')
+son5 = pygame.mixer.Sound('Son/sound5.mp3')
+BgMusique = pygame.mixer.Sound('Son/Brain Dance.mp3')
+pygame.mixer.init(frequency=1)
+BgMusique.set_volume(0.3)
+BgMusique.play(loops = -1)
+son = [son1,son2,son3,son4,son5]
 
 class Button():
     def __init__(self, x, y, image, val):
@@ -63,25 +73,50 @@ class Button():
                 self.appui = True
                 Completion[CodeNumber] = self.val
                 CodeNumber += 1
+                random.choice(son).play()
                 print(Completion)
                 if CodeComplete == Completion :
                     reponse = True
                 relai = 0
-
-
-
-                   
         screen.blit(self.image, (self.rect.x, self.rect.y))
         
         if pygame.mouse.get_pressed()[0] == 0:
             self.appui = False
 
+def Couleurs():
+    global coul
+    for loop in range(4):
+        if Completion[loop] == CodeComplete[loop]:
+            coul[loop] = 'Green'
+    for loop in range(4):
+        for i in range(4):
+            if Completion[loop] == CodeComplete[i] and coul[i] != 'Green' :
+                coul[loop] = 'Orange'
+    for loop in range(4):
+        if coul[loop] != 'Green' and coul[loop] != 'Orange':
+            coul[loop] = 'Red'
 
+def javel():
+    for loop in range(4):
+        coul[loop] = (0, 254, 0)
+            
 def test():
-    global CodeNumber, reponse, NombreTour, Completion, relai
+    global CodeNumber, reponse, NombreTour, Completion, relai, Ya
     if CodeNumber == 4 and relai == 1:
         CodeNumber = 0
+        Couleurs()
+        Ya = True
+    if CodeNumber == 4 and relai == 0:
+        relai = 1
+
+
+        
+
+def retest():
+    global CodeNumber, reponse, NombreTour, Completion, relai, Ya, BgMusique
+    if Ya == True:
         NombreTour -=1
+
         tps1 = pygame.time.get_ticks()
         cooldown = False
         while cooldown == False:
@@ -89,8 +124,7 @@ def test():
             if (tps2-tps1)>= 2000 :
                 cooldown = True
         Completion = [0,0,0,0]
-    if CodeNumber == 4 and relai == 0:
-        relai = 1
+        Ya = False
 
 
 
@@ -113,6 +147,9 @@ Bouton9_ = Button(725+decaX,300+decaY,Bouton9, 9)
 
 
 while True:
+    screen.blit(Fond_Jaune,(0,0))
+    screen.blit(Fond_Gris,Fond_Gris_Rect)
+    screen.blit(Fond_Noir,Fond_Noir_Rect)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -126,20 +163,18 @@ while True:
     if NombreTour == 0 and fin == False:
         print("perdu")
         fin = True
-        
-    chiffre_1_surf = LaFont.render(str(Completion[0]), False, 'Green')
-    chiffre_1_rect = chiffre_1_surf.get_rect(center = (275,150))
-    chiffre_2_surf = LaFont.render(str(Completion[1]), False, 'Green')
-    chiffre_2_rect = chiffre_2_surf.get_rect(center = (400,150))
-    chiffre_3_surf = LaFont.render(str(Completion[2]), False, 'Green')
-    chiffre_3_rect = chiffre_3_surf.get_rect(center = (525,150))
-    chiffre_4_surf = LaFont.render(str(Completion[3]), False, 'Green')
-    chiffre_4_rect = chiffre_4_surf.get_rect(center = (650,150))
     test()
+    chiffre_1_surf = LaFont.render(str(Completion[0]), False, coul[0])
+    chiffre_1_rect = chiffre_1_surf.get_rect(center = (275,150))
+    chiffre_2_surf = LaFont.render(str(Completion[1]), False, coul[1])
+    chiffre_2_rect = chiffre_2_surf.get_rect(center = (400,150))
+    chiffre_3_surf = LaFont.render(str(Completion[2]), False, coul[2])
+    chiffre_3_rect = chiffre_3_surf.get_rect(center = (525,150))
+    chiffre_4_surf = LaFont.render(str(Completion[3]), False, coul[3])
+    chiffre_4_rect = chiffre_4_surf.get_rect(center = (650,150))
+
     
-    screen.blit(Fond_Jaune,(0,0))
-    screen.blit(Fond_Gris,Fond_Gris_Rect)
-    screen.blit(Fond_Noir,Fond_Noir_Rect)
+
     Bouton1_.draw()
     Bouton2_.draw()
     Bouton3_.draw()
@@ -150,14 +185,16 @@ while True:
     Bouton8_.draw()
     Bouton9_.draw()
     
-
+    
 
     screen.blit(chiffre_1_surf, chiffre_1_rect)
     screen.blit(chiffre_2_surf, chiffre_2_rect)
     screen.blit(chiffre_3_surf, chiffre_3_rect)
     screen.blit(chiffre_4_surf, chiffre_4_rect)
-    
+    test()
     
     
     pygame.display.update()
+    retest()
+    javel()
     clock.tick(60)
